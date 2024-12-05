@@ -1,0 +1,8 @@
+{
+	"dependencies": {
+		"@trigger.dev/sdk": "^3.3.5"
+	},
+	"devDependencies": {
+		"@trigger.dev/build": "^3.3.5"
+	}
+}
