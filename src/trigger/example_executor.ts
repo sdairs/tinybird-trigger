@@ -33,5 +33,9 @@ export const exampleExecutor = task({
         // Run a query with FORMAT JSON
         const jsonFormatResult = await tinybirdQueryTask.triggerAndWait({ sql: "SELECT * FROM my_ds", format: "JSON" });
         console.log(jsonFormatResult);
+
+        // Run a query with a parameter 
+        const paramResult = await tinybirdQueryTask.triggerAndWait({ sql: "% SELECT * FROM my_ds WHERE number == {{Int8(test_int)}}", format: "JSON", params: { test_int: "7" } });
+        console.log(paramResult);
     },
 });

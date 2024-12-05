@@ -91,7 +91,7 @@ export const tinybirdQueryTask = task({
           },
           body: JSON.stringify({
             q: query,
-            ...(payload.params && { params: payload.params }),
+            ...payload.params,
           }),
         }
       );
