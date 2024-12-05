@@ -1,6 +1,6 @@
 # tinybird-trigger
 
-This repo contains a set of example task implementations for Tinybird APIs using [trigger.dev](https://trigger.dev).
+Example [trigger.dev](https://trigger.dev) task implementations for Tinybird APIs.
 
 ## Tasks
 
