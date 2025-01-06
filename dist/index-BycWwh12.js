@@ -89,7 +89,7 @@ class re {
     return this.transfomers[t];
   }
 }
-const ne = (e) => Object.prototype.toString.call(e).slice(8, -1), U = (e) => typeof e > "u", se = (e) => e === null, E = (e) => typeof e != "object" || e === null || e === Object.prototype ? !1 : Object.getPrototypeOf(e) === null ? !0 : Object.getPrototypeOf(e) === Object.prototype, T = (e) => E(e) && Object.keys(e).length === 0, g = (e) => Array.isArray(e), ie = (e) => typeof e == "string", oe = (e) => typeof e == "number" && !isNaN(e), ae = (e) => typeof e == "boolean", le = (e) => e instanceof RegExp, R = (e) => e instanceof Map, I = (e) => e instanceof Set, C = (e) => ne(e) === "Symbol", ce = (e) => e instanceof Date && !isNaN(e.valueOf()), ue = (e) => e instanceof Error, B = (e) => typeof e == "number" && isNaN(e), fe = (e) => ae(e) || se(e) || U(e) || oe(e) || ie(e) || C(e), ye = (e) => typeof e == "bigint", ge = (e) => e === 1 / 0 || e === -1 / 0, me = (e) => ArrayBuffer.isView(e) && !(e instanceof DataView), de = (e) => e instanceof URL, M = (e) => e.replace(/\./g, "\\."), P = (e) => e.map(String).map(M).join("."), b = (e) => {
+const ne = (e) => Object.prototype.toString.call(e).slice(8, -1), U = (e) => typeof e > "u", se = (e) => e === null, E = (e) => typeof e != "object" || e === null || e === Object.prototype ? !1 : Object.getPrototypeOf(e) === null ? !0 : Object.getPrototypeOf(e) === Object.prototype, T = (e) => E(e) && Object.keys(e).length === 0, g = (e) => Array.isArray(e), ie = (e) => typeof e == "string", oe = (e) => typeof e == "number" && !isNaN(e), ae = (e) => typeof e == "boolean", le = (e) => e instanceof RegExp, R = (e) => e instanceof Map, I = (e) => e instanceof Set, C = (e) => ne(e) === "Symbol", ce = (e) => e instanceof Date && !isNaN(e.valueOf()), ue = (e) => e instanceof Error, B = (e) => typeof e == "number" && isNaN(e), fe = (e) => ae(e) || se(e) || U(e) || oe(e) || ie(e) || C(e), ye = (e) => typeof e == "bigint", ge = (e) => e === 1 / 0 || e === -1 / 0, de = (e) => ArrayBuffer.isView(e) && !(e instanceof DataView), me = (e) => e instanceof URL, M = (e) => e.replace(/\./g, "\\."), P = (e) => e.map(String).map(M).join("."), b = (e) => {
   const t = [];
   let r = "";
   for (let s = 0; s < e.length; s++) {
@@ -149,7 +149,7 @@ const q = [
   f(R, "map", (e) => [...e.entries()], (e) => new Map(e)),
   f((e) => B(e) || ge(e), "number", (e) => B(e) ? "NaN" : e > 0 ? "Infinity" : "-Infinity", Number),
   f((e) => e === 0 && 1 / e === -1 / 0, "number", () => "-0", Number),
-  f(de, "URL", (e) => e.toString(), (e) => new URL(e))
+  f(me, "URL", (e) => e.toString(), (e) => new URL(e))
 ];
 function k(e, t, r, n) {
   return {
@@ -174,16 +174,16 @@ const x = k((e, t) => C(e) ? !!t.symbolRegistry.getIdentifier(e) : !1, (e, t) =>
   Float32Array,
   Float64Array,
   Uint8ClampedArray
-].reduce((e, t) => (e[t.name] = t, e), {}), L = k(me, (e) => ["typed-array", e.constructor.name], (e) => [...e], (e, t) => {
+].reduce((e, t) => (e[t.name] = t, e), {}), $ = k(de, (e) => ["typed-array", e.constructor.name], (e) => [...e], (e, t) => {
   const r = pe[t[1]];
   if (!r)
     throw new Error("Trying to deserialize unknown typed array");
   return new r(e);
 });
-function $(e, t) {
+function L(e, t) {
   return e != null && e.constructor ? !!t.classRegistry.getIdentifier(e.constructor) : !1;
 }
-const F = k($, (e, t) => ["class", t.classRegistry.getIdentifier(e.constructor)], (e, t) => {
+const F = k(L, (e, t) => ["class", t.classRegistry.getIdentifier(e.constructor)], (e, t) => {
   const r = t.classRegistry.getAllowedProps(e.constructor);
   if (!r)
     return { ...e };
@@ -194,14 +194,14 @@ const F = k($, (e, t) => ["class", t.classRegistry.getIdentifier(e.constructor)]
 }, (e, t, r) => {
   const n = r.classRegistry.getValue(t[1]);
   if (!n)
-    throw new Error("Trying to deserialize unknown class - check https://github.com/blitz-js/superjson/issues/116#issuecomment-773996564");
+    throw new Error(`Trying to deserialize unknown class '${t[1]}' - check https://github.com/blitz-js/superjson/issues/116#issuecomment-773996564`);
   return Object.assign(Object.create(n.prototype), e);
 }), G = k((e, t) => !!t.customTransformerRegistry.findApplicable(e), (e, t) => ["custom", t.customTransformerRegistry.findApplicable(e).name], (e, t) => t.customTransformerRegistry.findApplicable(e).serialize(e), (e, t, r) => {
   const n = r.customTransformerRegistry.findByName(t[1]);
   if (!n)
     throw new Error("Trying to deserialize unknown custom value");
   return n.deserialize(e);
-}), we = [F, x, G, L], _ = (e, t) => {
+}), we = [F, x, G, $], _ = (e, t) => {
   const r = z(we, (s) => s.isApplicable(e, t));
   if (r)
     return {
@@ -228,7 +228,7 @@ const he = (e, t, r) => {
       case "custom":
         return G.untransform(e, t, r);
       case "typed-array":
-        return L.untransform(e, t, r);
+        return $.untransform(e, t, r);
       default:
         throw new Error("Unknown transformation: " + t);
     }
@@ -238,7 +238,9 @@ const he = (e, t, r) => {
       throw new Error("Unknown transformation: " + t);
     return n.untransform(e, r);
   }
-}, d = (e, t) => {
+}, m = (e, t) => {
+  if (t > e.size)
+    throw new Error("index out of bounds");
   const r = e.keys();
   for (; t > 0; )
     r.next(), t--;
@@ -257,9 +259,9 @@ const be = (e, t) => {
   for (let r = 0; r < t.length; r++) {
     const n = t[r];
     if (I(e))
-      e = d(e, +n);
+      e = m(e, +n);
     else if (R(e)) {
-      const s = +n, i = +t[++r] == 0 ? "key" : "value", o = d(e, s);
+      const s = +n, i = +t[++r] == 0 ? "key" : "value", o = m(e, s);
       switch (i) {
         case "key":
           e = o;
@@ -285,28 +287,28 @@ const be = (e, t) => {
       n = n[o];
     else if (I(n)) {
       const l = +o;
-      n = d(n, l);
+      n = m(n, l);
     } else if (R(n)) {
       if (i === t.length - 2)
         break;
-      const c = +o, O = +t[++i] == 0 ? "key" : "value", m = d(n, c);
+      const c = +o, O = +t[++i] == 0 ? "key" : "value", d = m(n, c);
       switch (O) {
         case "key":
-          n = m;
+          n = d;
           break;
         case "value":
-          n = n.get(m);
+          n = n.get(d);
           break;
       }
     }
   }
   const s = t[t.length - 1];
   if (g(n) ? n[+s] = r(n[+s]) : E(n) && (n[s] = r(n[s])), I(n)) {
-    const i = d(n, +s), o = r(i);
+    const i = m(n, +s), o = r(i);
     i !== o && (n.delete(i), n.add(o));
   }
   if (R(n)) {
-    const i = +t[t.length - 2], o = d(n, i);
+    const i = +t[t.length - 2], o = m(n, i);
     switch (+s == 0 ? "key" : "value") {
       case "key": {
         const c = r(o);
@@ -321,20 +323,20 @@ const be = (e, t) => {
   }
   return e;
 };
-function v(e, t, r = []) {
+function V(e, t, r = []) {
   if (!e)
     return;
   if (!g(e)) {
-    p(e, (i, o) => v(i, t, [...r, ...b(o)]));
+    p(e, (i, o) => V(i, t, [...r, ...b(o)]));
     return;
   }
   const [n, s] = e;
   s && p(s, (i, o) => {
-    v(i, t, [...r, ...b(o)]);
+    V(i, t, [...r, ...b(o)]);
   }), t(n, r);
 }
 function Ee(e, t, r) {
-  return v(t, (n, s) => {
+  return V(t, (n, s) => {
     e = S(e, s, (i) => he(i, n, r));
   }), e;
 }
@@ -354,7 +356,7 @@ function Re(e, t) {
     p(t, r);
   return e;
 }
-const Ie = (e, t) => E(e) || g(e) || R(e) || I(e) || $(e, t);
+const Ie = (e, t) => E(e) || g(e) || R(e) || I(e) || L(e, t);
 function Oe(e, t, r) {
   const n = r.get(e);
   n ? n.push(t) : r.set(e, [t]);
@@ -393,20 +395,20 @@ const W = (e, t, r, n, s = [], i = [], o = /* @__PURE__ */ new Map()) => {
     return {
       transformedValue: null
     };
-  const c = _(e, r), O = (c == null ? void 0 : c.value) ?? e, m = g(O) ? [] : {}, w = {};
+  const c = _(e, r), O = (c == null ? void 0 : c.value) ?? e, d = g(O) ? [] : {}, w = {};
   p(O, (y, u) => {
     if (u === "__proto__" || u === "constructor" || u === "prototype")
       throw new Error(`Detected property ${u}. This is a prototype pollution risk, please remove it from your object.`);
     const h = W(y, t, r, n, [...s, u], [...i, e], o);
-    m[u] = h.transformedValue, g(h.annotations) ? w[u] = h.annotations : E(h.annotations) && p(h.annotations, (Y, Z) => {
+    d[u] = h.transformedValue, g(h.annotations) ? w[u] = h.annotations : E(h.annotations) && p(h.annotations, (Y, Z) => {
       w[M(u) + "." + Z] = Y;
     });
   });
   const N = T(w) ? {
-    transformedValue: m,
+    transformedValue: d,
     annotations: c ? [c.type] : void 0
   } : {
-    transformedValue: m,
+    transformedValue: d,
     annotations: c ? [c.type, w] : w
   };
   return l || o.set(e, N), N;
@@ -432,16 +434,16 @@ function Pe(e, t, r, n, s) {
     configurable: !0
   });
 }
-function V(e, t = {}) {
+function v(e, t = {}) {
   if (D(e))
-    return e.map((s) => V(s, t));
+    return e.map((s) => v(s, t));
   if (!ke(e))
     return e;
   const r = Object.getOwnPropertyNames(e), n = Object.getOwnPropertySymbols(e);
   return [...r, ...n].reduce((s, i) => {
     if (D(t.props) && !t.props.includes(i))
       return s;
-    const o = e[i], l = V(o, t);
+    const o = e[i], l = v(o, t);
     return Pe(s, i, l, e, t.nonenumerable), s;
   }, {});
 }
@@ -468,7 +470,7 @@ class a {
   }
   deserialize(t) {
     const { json: r, meta: n } = t;
-    let s = V(r);
+    let s = v(r);
     return n != null && n.values && (s = Ee(s, n.values, this)), n != null && n.referentialEqualities && (s = Re(s, n.referentialEqualities)), s;
   }
   stringify(t) {
@@ -502,16 +504,16 @@ a.registerClass = a.defaultInstance.registerClass.bind(a.defaultInstance);
 a.registerSymbol = a.defaultInstance.registerSymbol.bind(a.defaultInstance);
 a.registerCustom = a.defaultInstance.registerCustom.bind(a.defaultInstance);
 a.allowErrorProps = a.defaultInstance.allowErrorProps.bind(a.defaultInstance);
-const Te = a.serialize, Se = a.deserialize, ve = a.stringify, Ve = a.parse, Ne = a.registerClass, ze = a.registerCustom, Be = a.registerSymbol, _e = a.allowErrorProps;
+const Te = a.serialize, Se = a.deserialize, Ve = a.stringify, ve = a.parse, Ne = a.registerClass, ze = a.registerCustom, Be = a.registerSymbol, _e = a.allowErrorProps;
 export {
   a as SuperJSON,
   _e as allowErrorProps,
   a as default,
   Se as deserialize,
-  Ve as parse,
+  ve as parse,
   Ne as registerClass,
   ze as registerCustom,
   Be as registerSymbol,
   Te as serialize,
-  ve as stringify
+  Ve as stringify
 };

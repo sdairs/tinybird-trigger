@@ -1,6 +1,6 @@
 {
   "name": "@sdairs/tinybird-trigger-tasks",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "license": "MIT",
   "files": [
@@ -11,9 +11,9 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.umd.cjs",
-      "types": "./dist/index.d.ts"
+      "require": "./dist/index.umd.cjs"
     }
   },
   "scripts": {
@@ -22,13 +22,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@trigger.dev/sdk": "^3.3.5"
+    "@trigger.dev/sdk": "^3.3.7"
   },
   "devDependencies": {
-    "@trigger.dev/build": "^3.3.5",
+    "@trigger.dev/build": "^3.3.7",
     "@types/node": "^22.10.5",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.10",
-    "vite-plugin-dts": "^3.7.0"
+    "typescript": "^5.7.2",
+    "vite": "^6.0.7",
+    "vite-plugin-dts": "^4.4.0"
   }
 }
