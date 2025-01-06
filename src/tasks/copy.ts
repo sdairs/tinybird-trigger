@@ -58,7 +58,7 @@ export const tinybirdCopyTask = task({
           `https://api.tinybird.co/v0/jobs/${jobId}`,
           {
             headers: {
-              'Authorization': `Bearer ${TINYBIRD_TOKEN}`
+              'Authorization': `Bearer ${token}`
             }
           }
         ).then((r) => r.json());

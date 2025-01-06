@@ -87,7 +87,7 @@ export const tinybirdQueryTask = task({
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${TINYBIRD_TOKEN}`,
+            Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
             Accept: "application/json",
           },
