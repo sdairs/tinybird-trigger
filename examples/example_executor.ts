@@ -1,6 +1,6 @@
 import { task } from "@trigger.dev/sdk/v3";
-import { tinybirdQueryTask } from "../src/tasks/query";
-import { tinybirdCopyTask } from "../src/tasks/copy";
+import { tinybirdQueryTask } from "@sdairs/tinybird-trigger-tasks";
+import { tinybirdCopyTask } from "@sdairs/tinybird-trigger-tasks";
 
 const COPY_PIPE_ID = process.env.TINYBIRD_COPY_JOB_PIPE_ID;
 const COPY_WITH_PARAM_ID = process.env.TINYBIRD_COPY_WITH_PARAM_ID;
@@ -11,11 +11,11 @@ export const exampleExecutor = task({
         console.log("Example executor task is running");
 
         // Run a copy job
-        const copyResult = await tinybirdCopyTask.triggerAndWait({ pipeId: COPY_PIPE_ID });
+        const copyResult = await tinybirdCopyTask.triggerAndWait({ pipeId: COPY_PIPE_ID! });
         console.log(copyResult);
 
         // Run a copy job with a parameter
-        const copyWithParamResult = await tinybirdCopyTask.triggerAndWait({ pipeId: COPY_WITH_PARAM_ID, params: { test_int: "7" } });
+        const copyWithParamResult = await tinybirdCopyTask.triggerAndWait({ pipeId: COPY_WITH_PARAM_ID!, params: { test_int: "7" } });
         console.log(copyWithParamResult);
 
         // Run a query with no FORMAT

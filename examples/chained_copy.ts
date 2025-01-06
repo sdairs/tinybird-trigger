@@ -1,5 +1,5 @@
 import { task } from "@trigger.dev/sdk/v3";
-import { tinybirdCopyTask } from "../src/tasks/copy";
+import { tinybirdCopyTask } from "@sdairs/tinybird-trigger-tasks";
 
 export const chainedCopy = task({
     id: "chained-copy",
