@@ -1,11 +1,12 @@
 import { logger, task } from "@trigger.dev/sdk/v3";
 
-const TINYBIRD_TOKEN = process.env.TINYBIRD_TOKEN;
+const TINYBIRD_TOKEN = process.env.TINYBIRD_TOKEN ?? undefined;
 
 interface QueryPayload {
   sql: string;
   params?: Record<string, string | number | boolean>;
   format?: string;
+  token?: string;
 }
 
 interface TinybirdErrorResponse {
@@ -54,9 +55,10 @@ function extractFormat(query: string): Format | null {
 
 export const tinybirdQueryTask = task({
   id: "tinybird-query",
-  run: async (payload: QueryPayload, { ctx }) => {
-    if (!TINYBIRD_TOKEN) {
-      throw new Error("Tinybird API token not found");
+  run: async (payload: QueryPayload) => {
+    const token = TINYBIRD_TOKEN ?? payload.token;
+    if (!token) {
+      throw new Error("Tinybird API token not found. Either set the TINYBIRD_TOKEN environment variable, or provide a token in the task payload.");
     }
 
     if (!payload.sql) {

@@ -1,12 +1,19 @@
 import { logger, task, wait } from "@trigger.dev/sdk/v3";
 
-const TINYBIRD_TOKEN = process.env.TINYBIRD_TOKEN;
+const TINYBIRD_TOKEN = process.env.TINYBIRD_TOKEN ?? undefined;
+
+interface CopyPayload {
+  pipeId: string;
+  token?: string;
+  params?: { [key: string]: string };
+}
 
 export const tinybirdCopyTask = task({
   id: "copy_job",
-  run: async (payload: { pipeId: string; params?: { [key: string]: string } }, { ctx }) => {
-    if (!TINYBIRD_TOKEN) {
-      throw new Error("Tinybird API token not found");
+  run: async (payload: CopyPayload) => {
+    const token = TINYBIRD_TOKEN ?? payload.token;
+    if (!token) {
+      throw new Error("Tinybird API token not found. Either set the TINYBIRD_TOKEN environment variable, or provide a token in the task payload.");
     }
     if (!payload.pipeId) {
       throw new Error("Pipe ID not found");
@@ -14,7 +21,7 @@ export const tinybirdCopyTask = task({
 
     try {
       let url = `https://api.tinybird.co/v0/pipes/${payload.pipeId}/copy`;
-      
+
       // Add search params if they exist
       if (payload.params) {
         const searchParams = new URLSearchParams();

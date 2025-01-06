@@ -1,6 +1,6 @@
 import { task } from "@trigger.dev/sdk/v3";
-import { tinybirdQueryTask } from "./query";
-import { tinybirdCopyTask } from "./copy";
+import { tinybirdQueryTask } from "../src/tasks/query";
+import { tinybirdCopyTask } from "../src/tasks/copy";
 
 const COPY_PIPE_ID = process.env.TINYBIRD_COPY_JOB_PIPE_ID;
 const COPY_WITH_PARAM_ID = process.env.TINYBIRD_COPY_WITH_PARAM_ID;
