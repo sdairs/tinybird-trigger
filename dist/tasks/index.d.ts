@@ -1,3 +1,4 @@
 import { tinybirdCopyTask } from './copy';
 import { tinybirdQueryTask } from './query';
-export { tinybirdCopyTask, tinybirdQueryTask };
+import { tinybirdPipeTask } from './pipe';
+export { tinybirdCopyTask, tinybirdQueryTask, tinybirdPipeTask };
